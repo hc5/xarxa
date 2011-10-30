@@ -1,0 +1,142 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript" src="/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/options.js"></script>
+<script type="text/javascript" src="/plugins/jquery.color.js"></script>
+
+<script type="text/javascript" src="/jit.js" ></script>  
+<script type="text/javascript" src="/jquery.scrollTo-min.js"></script>
+<script type="text/javascript" src="/utils.js"></script>
+<script type="text/javascript" src="/farbtastic.js"></script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>xarxa</title>
+<link href="/styles.css" rel="stylesheet" type="text/css" />
+<link href="/headers.css" rel="stylesheet" type="text/css" />
+ <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="/farbtastic.css" type="text/css" />
+<script type="text/javascript">
+var skip = true;
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17199758-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<script type="text/javascript" src="/stylize.js"></script>
+</head>
+<body  id="main">
+<div id="cover" class="cover" >&nbsp; <noscript><br /><span class="textLink"><b>Seems like you have javascript turned off...  </b>
+  
+
+  </span>
+  
+  </noscript></div>
+<center>
+
+	 <select class="s" id="autosuggest" size="6" style="width:450px;display:none;" onmouseup="select(this.value)" onChange="select(this.value)" onBlur="setTimeout('hideFill(\'autosuggest\')',200)" onFocus="isFocused(this)"></select>
+ <table width="100%" border="0px" cellpadding="0" cellspacing="0">
+  <tr><td id="topframe" valign="top">
+
+  <div>
+ 	<table id="bg" width="100%" border="0" height="65px" cellpadding="0" cellspacing="0">
+ 	  <tr>
+ 	    <td width="33%" align="left"><a href=http://www.xarxa.ca><img src="/small.png" id="smallLogo"/></a></td>
+ 	    <td ><span class="in">
+ 	      <input class = "s" id="in" type="text" size="70" onKeyUp="autofill(this.value)" onClick="this.select()" onBlur="setTimeout('hideFill(\'in\')',200)" onFocus="isFocused(this)"/>
+ 	    </span></td>
+ 	    
+ 	    <td width="35%" align="left">
+ 	   <input type="button" class="bt" onClick="engage()" value="Engage!" />
+        
+        
+        <span class="options" id="options" onMouseOver="showOptions(this)" onMouseOut="isOut()">Options        </span> 	
+        <div align="right" style="height:0px;vertical-align:bottom;display:none; " id="share2" > <a href=http://www.facebook.com/share.php?u=http%3A%2F%2Fwww.xarxa.ca%2F&t=xarxa onClick="window.open('http://www.facebook.com/share.php?u=http%3A%2F%2Fwww.xarxa.ca%2F&t=xarxa','xarxa','height=500,width=600'); 
+return false;" target="newWin"><img src="/Share_button.png" alt=”Share on Facebook” /></a></div>   </td>
+      
+ </tr>
+  </table>
+  </div>
+ 
+  
+  </td></tr>
+  <tr><td  id="midframe"  style="padding:0px">
+          <div id="infovis" onMouseOver="over()" onmousemove='move(event)' onmousedown='down(event)' onMouseUp="up(event)" onselectstart="return false;">
+            <div class="links" onselectstart="return false;"><span class="link" onClick="showLink()">Link this course</span> | <span class="link" onClick="generateLink()">Link this view</span></div></div>
+          </td></tr>
+       <tr><td align="right">
+      </td></tr>
+      </table>
+
+<div class="infobox" id="infobox"></div>
+<div class="optionBox" id="optionBox" onMouseOver="isIn()" onMouseOut="isOut()">
+<input type="button" id="btn" value="off" class="off" onClick="togglestyle(this)" />
+Only include name and prerequisite in course description<br />
+<hr width="95%" size="1" color="#FAA21D"/>
+Color of course node: &nbsp;<input  type="text" class="colorInput"  spellcheck="false" id="nodeColor" name="color" value="#123456" onFocus="selectColor(this)" onBlur="unselectColor(this)"/><br />
+Color of label text: &nbsp;<input  type="text" class="colorInput"  spellcheck="false" id="labelColor" name="color" value="#123456" onFocus="selectColor(this)" onBlur="unselectColor(this)"/><br />
+Color of line not in path: &nbsp;<input  type="text" class="colorInput"  spellcheck="false" id="lineColor" name="color" value="#123456" onFocus="selectColor(this)" onBlur="unselectColor(this)"/><br />
+Color of course node in path: &nbsp;<input  type="text" class="colorInput"  spellcheck="false" id="selNodeColor" name="color" value="#123456" onFocus="selectColor(this)" onBlur="unselectColor(this)"/><br />
+Color of line in path: &nbsp;<input type="text" class="colorInput"  spellcheck="false" id="selLineColor" name="color" value="#123456" onFocus="selectColor(this)" onBlur="unselectColor(this)"/><br />
+Color of canvas background: &nbsp;<input  type="text" class="colorInput"  spellcheck="false" id="bgColor" name="color" value="#123456" onFocus="selectColor(this)" onBlur="unselectColor(this)"/><br />
+<hr width="95%" size="1" color="#FAA21D"/>
+<input type="button" class="bt" onClick="confirm()" value="hokai!" style="font-weight:100;font-size:10px;width:6em;"/>&nbsp;&nbsp;&nbsp;<input type="button" class="bt" onClick="cancel()" value="nvm" style="font-weight:100;font-size:10px;width:6em;"/>
+</div>
+<div class="colorBox" onMouseOver="isIn()" onMouseOut="isOut()" id="colorpickernodeColor"></div>
+<div class="colorBox" onMouseOver="isIn()" onMouseOut="isOut()" id="colorpickerlabelColor"></div>
+<div class="colorBox" onMouseOver="isIn()" onMouseOut="isOut()" id="colorpickerlineColor"></div>
+<div class="colorBox" onMouseOver="isIn()" onMouseOut="isOut()" id="colorpickerselNodeColor"></div>
+<div class="colorBox" onMouseOver="isIn()" onMouseOut="isOut()" id="colorpickerselLineColor"></div>
+<div class="colorBox" onMouseOver="isIn()" onMouseOut="isOut()" id="colorpickerbgColor"></div>
+<div id="showLink" class="cover" style="background-color:rgba(0,0,0,0.5);z-index:99999999;display:none;" align="center">
+<table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+<tr height="100%"><td width="100%" align="center" valign="middle"> 
+<div id="position" align="center"  class="linkBox">
+<span id="message" class="infoText"></span>
+<input type="text" id="link" class="s" onClick="this.select()" style="width:400px;height:35px;font-size:20px" />
+<br />
+<input type="button" class="bt" onClick="$('#showLink').hide()" value="Close" /> 
+</div>
+</td></tr></table>
+</div>
+</body>
+<script type="text/javascript" src="/lzw.js"></script>
+<script>
+var windowHeight = $(window).height()-65;
+$("#share2").fadeIn();
+$('#topframe').css("height","65");
+$('#midframe').css("height",windowHeight);
+
+engaged = true;
+var id = gup("i");
+//console.log(id);
+$.get('/loadstate.php?i='+id,function(data){
+data = lzw_decode(data);
+//console.log(data);
+data = JSON.parse(data);
+init(data.json);
+
+//st.onClick(st.root);
+st.onClick(data.clickedNode);
+st.drag(data.offset.x,data.offset.y);
+}
+);
+function gup( name )
+{	
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+</script>
+
+</html>

@@ -1,0 +1,287 @@
+<?php
+function getCourseNum($course){
+	global $mysql;
+	$course = str_replace("-"," ",$course);
+	$course = strtoupper($course);
+	if($result = $mysql->query("select id from courses where course_id = \"$course\";")){
+		$row =  $result->fetch_array(MYSQLI_ASSOC);
+		return $row["id"];
+	}
+
+	else{
+		echo $mysql->error;
+		return $course;
+	}
+}
+$mysql;
+function initialize(){
+global $mysql;
+$mysql = new mysqli("localhost","root","19910728","test");
+if (mysqli_connect_errno()) {
+	echo  mysqli_connect_error();
+	exit();
+}
+}
+function getCourseId($id){
+	global $mysql;
+	$query = "select course_id from courses where id = $id";
+	if($result = $mysql->query($query)){
+		while($row = $result->fetch_array(MYSQLI_ASSOC)){
+			return $row[course_id];
+		}
+	}
+	else{
+		echo "<b>$query</b>";
+		echo $mysql->error."<br>";
+	}
+}
+function getPrereqs($id){
+	if($id=="")
+	return null;
+	global $reverse;
+	global $mysql;
+	$subtree = array();
+	
+		$query = "select distinct tail from head_tail where head = $id";
+	if($result = $mysql->query($query)){
+		while($row = $result->fetch_array(MYSQLI_ASSOC)){
+			
+			$prereq = $row[tail];
+			$prereqId = getCourseId($prereq);
+		
+			$subtree[$prereqId] = getPrereqs($prereq);
+		}
+	}
+	else{
+		echo "<b>$query</b>";
+		echo $mysql->error."<br>";
+	}
+	if(count($subtree)==0){
+		$subtree = "No prerequisites for this course";
+	}
+
+	return $subtree;
+}
+function getPrereqText($id){
+	$desc;
+	global $mysql;
+			if($result = $mysql->query("select distinct prereq from prereqs_text where course_id = \"".($id)."\";")){
+				try{
+					while($row = $result->fetch_array(MYSQLI_ASSOC)){
+						$desc =$row[prereq];
+					}
+				}
+				catch(Exception $e){
+					echo $e->getTraceAsString();
+				}
+			}
+			else{
+				echo "<b>$query</b>";
+				echo $mysql->error."<br>";
+			}
+	return $desc;
+}
+$courseCount = 0;
+function getJson($id){
+	global $courseCount;
+	$dataArray = array();
+	$courseId = ($id);
+	$dataArray["id"]="node".$courseCount++;
+	$dataArray["name"]=format($courseId);
+	$data = array();
+	$data["prereq"]=getPrereqText($courseId);
+	//$data['$orn']="right";
+	$dataArray["data"]=$data;
+	$dataArray["children"]=getNodeChildren($id);
+	foreach (getPostReqs($courseId) as $parent){
+		$dataArray["children"][]=$parent;		
+	}
+	return $dataArray;
+}
+function getNodeChildren($id){
+	global $mysql;
+	global $courseCount;
+	$courseId = ($id);
+	//echo "<b>".$dataArray["data"]."</b><br>";
+	$children = array();
+	$query = "select distinct tail from headtail where head = \"$id\"";
+	if($result = $mysql->query($query)){
+		while($row = $result->fetch_array(MYSQLI_ASSOC)){
+			$prereq = $row[tail];
+			
+			$childArray = array();
+			$childArray["id"]= "node".$courseCount++;
+			$childArray["name"]=format($prereq);
+			$childData = array();
+			$childData['prereq']=getPrereqText($prereq);
+			$childData['$orn']="left";
+			//echo $childData;
+			$childArray["data"]=$childData;
+			
+			$childArray["children"]=getNodeChildren($prereq);
+			$children[]=$childArray;
+		}
+	}
+	else{
+		echo "<b>$query</b>";
+		echo $mysql->error."<br>";
+	}
+	return $children;
+}
+$edgeList = array();
+function getPostReqs($courseId){
+	global $mysql;
+	global $courseCount;
+	$parents = array();
+	$query = "select distinct head from headtail where tail = \"$courseId\"";
+	if($result = $mysql->query($query)){
+		while($row = $result->fetch_array(MYSQLI_ASSOC)){
+			
+			$parentId= ($row[head]);
+			$parent = array();
+			$parent["id"]="node".$courseCount++;
+			$parent["name"]=($parentId);
+			$parentData=array();
+			$parentData['prereq']=getPrereqText($parentId);
+			$parentData['$orn']="right";
+			$parent["data"]=$parentData;
+			$parent["children"]=array();
+			$parents[]=$parent;
+		}
+	}
+	else{
+		echo "<br>$query</br>";
+		echo $mysql->error."<br>";
+	}
+	return $parents;
+}
+function format($course_id){
+	return strtoupper(str_replace("-"," ",$course_id));
+}
+function printCourseTree($course_id){
+	global $mysql;
+	echo "<tr><td><button class='title'>Course tree for ".format($course_id).":</button></tr></td>";
+	$mysql->query("update courses set popularity = popularity+1 where course_id = \"".format($course_id)."\"");
+	$id = getCourseNum($course_id);
+	$raw = print_r(getPrereqs($id),true);
+	$raw = explode("\n",$raw);
+	$count = count($raw);
+	for($i = 0;$i<$count;$i++){
+		$line = $raw[$i];
+
+		if(stristr($line,"Array")&&stristr($line,"[")){
+			//echo strpos($line,"]");
+			$course = substr($line,strpos($line,"[")+1,strpos($line,"]")-strpos($line,"[")-1);
+			//echo $course;
+			$courseId = str_replace(" ","-",$course);
+			$courseId = strtolower($courseId);
+			$desc;
+			if($result = $mysql->query("select prereq from prereqs_text where course_id = \"$courseId\";")){
+				//echo $desc!=null;
+				try{
+					while($row = $result->fetch_array(MYSQLI_ASSOC)){
+						//$desc = "lala";
+						$desc =$row[prereq];
+					}
+				}
+				catch(Exception $e){
+					echo $e->getTraceAsString();
+				}
+			}
+			else{
+				echo "<b>$query</b>";
+				echo $mysql->error."<br>";
+			}
+			//$line = str_replace("  ","&nbsp;&nbsp;&nbsp;&nbsp;",$line);
+			$line = (strlen($line)-strlen(ltrim($line))).$line;
+			$raw[$i] = str_replace("Array",$desc,$line);
+				
+		}
+		else if(trim($line)=="("||trim($line)==")"){
+			$raw[$i]="";
+		}
+		else{
+			if((strlen($line)-strlen(ltrim($line))))
+			$line = (strlen($line)-strlen(ltrim($line))).$line;
+			$raw[$i] = $line;
+		}
+	}
+	if($result = $mysql->query("select prereq from prereqs_text where course_id = \"$course_id\";")){
+			while($row = $result->fetch_array(MYSQLI_ASSOC)){
+				//$desc = "lala";
+				$raw[0] =$row[prereq];
+			}
+	}
+	else{
+		echo "<b>$query</b>";
+		echo $mysql->error."<br>";
+	}
+	$parsed = array();
+	for($i = 0;$i<$count;$i++){
+		if($raw[$i])
+			$parsed[] = $raw[$i];
+	}
+	$count = count($parsed);
+	for($i = 0;$i<$count;$i++){
+		
+		$line = $parsed[$i];
+		$line = str_replace("=>","",$line);
+		
+		$ar = explode(" ",$line);
+		if($ar[0]!=0){
+			$line = trim(strstr($line," "));
+			$cid = substr($line,1,strpos($line,']')-1);
+			$line = str_replace("[","",$line);
+		$line = str_replace("]","",$line);
+		}
+		switch ($ar[0]){				
+			case 4:
+	
+					$line = "<button onmouseover='show(this)' onmouseout='hide(this)' class = 'e d c b a col1' alt='$line'>$cid</button>";
+				break;
+			case 12:
+				
+					$line = "<button onmouseover='show(this)' onmouseout='hide(this)' class = 'd c b a col2' alt='$line'>$cid</button>";
+				break;
+			case 20:
+					$line = "<button onmouseover='show(this)' onmouseout='hide(this)' class = 'c b a col3' alt='$line'>$cid</button>";
+				break;
+			case 28:
+				$line = "<button onmouseover='show(this)' onmouseout='hide(this)' class = 'b a col4' alt='$line'>$cid</button>";
+				break;
+			case 36:
+					$line = "<button onmouseover='show(this)' onmouseout='hide(this)' class = 'a col5' alt='$line'>$cid</button>";
+				break;
+			default:
+				$line = "<button class = 'title1'>$line</button>";
+				break;
+		}
+		echo "<tr><td>".$line."</td></tr>";
+	}
+	//$raw = str_replace("Array","",$raw);
+	//$raw = "<pre>$raw</pre>";
+	//$raw = str_replace("\n\n","\n",$raw);
+	//	$raw= str_replace("  ","&nbsp;&nbsp;&nbsp;",nl2br($raw));
+	//$raw = str_replace("<br /><br />","<br />",$raw);
+	//echo $raw;
+}
+	if($_GET["test"]){
+		initialize();
+		$json = getJson((173));
+		echo json_encode($json);
+	}
+	else{
+	initialize();
+	$reverse = $_GET["reverse"];
+	//echo !$reverse;
+	if(!$reverse){
+		
+	echo json_encode(getJson(($_GET["course"])));
+
+	}
+	else{
+	$courseCount = $_GET["nodeCount"];
+	echo json_encode(getPostReqs($_GET["course"]));
+	}
+	}
+?>

@@ -1,0 +1,4 @@
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^courses/([^/]+)/([^/]+) /courses.html?p=$1&c=$2
+#RewriteRule ^courses\.php$ /courses.html

@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+<link href="headers.css" rel="stylesheet" type="text/css" />
+ <link rel="icon" href="/favicon.ico" type="image/x-icon">
+ <title>Stuff for geeks</title>
+ <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17199758-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+ </head>
+ <body>
+<table width="100%" border="0">
+  <tr>
+    <td width="24%"><a href=http://www.xarxa.ca><img src="small.png" width="267" height="65" /></a></td>
+    <td width="36%" valign="middle"><span class="textLink">Technical Information</span></td>
+    <td width="40%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="3"><hr width="100%" size="3" color="#FAA21D"/></td>
+   
+  </tr>
+  <tr>
+    <td colspan="3" >
+  <div width="100%" style="padding:20px">
+  <span class="infoText">
+  For rendering the charts I'm using a modfied version of <a href="http://thejit.org/">JIT(Javascript Infovis Toolkit)</a>. I've modfied a few things to suit my needs for this, and added a few things that the API was missing. The toolkit mainly relies on canvas to do its work, which is why this only works on the latest versions of Chrome/Firefox/Opera/Safari, and probably IE 9 when it comes out.
+  <br />
+  <br />
+  I'm using mysql to store all the courses and their relationships. The course info was gotten through a crawler I wrote in php that went through McGill's course catalogue. Every search result is cached serverside after the first search, so I guess eventually this site will become static.
+  <br />
+  <br />
+  The 'autofill' function was really just a hack involving a dynamically placed 'select' element, and AJAX to fetch the results to the autofill.
+  <br /><br />
+  The color picking tool in options is implemented with the JQuery plugin <a href="http://acko.net/dev/farbtastic">Farbtastic</a>.
+  <br /><br />
+ All the animations and AJAX were implemented with JQuery.
+ <br /><br />
+ The option settings were saved with the HTML5 localStorage. Since any browser that supports canvas will support localStorage, I won't have to worry about incompatibility issues.
+ <br /><br />
+ This site doesn't use any Flash elements, so I guess it will work on the iPhone/iPad, not sure about the performance though, as I have never tested it on the mobile devices.
+  </span>
+  </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

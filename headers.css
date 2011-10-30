@@ -1,0 +1,27 @@
+@charset "utf-8";
+/* CSS Document */
+
+h1{
+font-size:14px;
+color:#E88500;
+}
+h2{
+font-size:9px;
+color:#CCCCCC;
+}
+h3{
+font-size:11px;
+color:#0DB0FF
+}
+h4{
+font-size:10px;
+color:#FFFFFF;
+}
+h5{
+font-size:11px;
+color:#999999;
+}
+h6{
+font-size:13px;
+color:#73BF00;
+}

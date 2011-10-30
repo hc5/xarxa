@@ -1,0 +1,115 @@
+var threadNum=new Array();
+var onOptions = false;
+function isIn(){
+//console.log('in');
+onOptions = true;
+}
+function isOut(){
+//console.log('out');
+onOptions = false;
+//hideOptions();
+}
+function showOptions(btn){
+isIn();
+	$(btn).css("background-color","#2093D0");
+	$(btn).css("color","#EEEEEE");
+	$(btn).css("border-color","#2093D0");
+	var o = $("#optionBox");
+	var pos = $("#options").offset();
+	pos.top+=26;
+	pos.left-=o.width()-$("#options").width();
+	
+	o.css(pos);
+	o.fadeIn();
+	//console.log(o.offset());
+	setTimeout('threadNum.push(setInterval("hideOptions();",1000));',2000);
+}
+function hideOptions(){
+
+	//console.log("hide called");
+	if(!onOptions){
+	$(".colorBox").fadeOut();
+	btn=document.getElementById("options");
+	$(btn).css("background-color","#FFFFFF");
+	$(btn).css("color","#333333");
+	$(btn).css("border-color","#999999");
+		var o = $("#optionBox");
+	o.fadeOut();
+	for(var i in threadNum)
+	clearInterval(threadNum[i]);
+	}
+}
+function selectColor(input){
+ if($('#optionBox').is(':visible')){
+var pos = $(input).offset();
+pos.top;
+pos.left+=$(input).width();
+$("#colorpicker"+input.id).css(pos);
+$("#colorpicker"+input.id).fadeIn();
+}
+}
+function unselectColor(input){
+$("#colorpicker"+input.id).fadeOut();
+}
+function confirm(){
+ shorten =  $("#btn").val()=="on";
+ lineCol=$("#lineColor").val();
+  nodeCol=$("#nodeColor").val();
+  selLineCol= $("#selLineColor").val();
+  selNodeCol=$("#selNodeColor").val();
+  bgCol=$("#bgColor").val();
+  labelCol=$("#labelColor").val();
+  $("#infovis").css("background-color",bgCol);
+  $(".node").css("color",labelCol);
+  if(st){
+  st.controller.Node.color=nodeCol;
+  st.controller.Edge.color=lineCol;
+  st.refresh();
+  }
+  saveSettings();
+  onOptions=false;
+  hideOptions();
+}
+function saveSettings(){
+localStorage.setItem("shorten",shorten);
+localStorage.setItem("lineCol",lineCol);
+localStorage.setItem("nodeCol",nodeCol);
+localStorage.setItem("selLineCol",selLineCol);
+localStorage.setItem("selNodeCol",selNodeCol);
+localStorage.setItem("bgCol",bgCol);
+localStorage.setItem("labelCol",labelCol);
+}
+function loadSettings(){
+if(!localStorage.getItem("shorten")){
+shorten = false;
+lineCol='#23A4FF';
+nodeCol='#333333' ;
+selLineCol= "#111111";
+selNodeCol="#E32D2D";
+bgCol="#FFFFFF";
+labelCol="#FFFFFF";
+}
+else{
+shorten = localStorage.getItem("shorten");
+lineCol=localStorage.getItem("lineCol");
+nodeCol=localStorage.getItem("nodeCol");
+selLineCol= localStorage.getItem("selLineCol");
+selNodeCol=localStorage.getItem("selNodeCol");
+bgCol=localStorage.getItem("bgCol");
+labelCol=localStorage.getItem("labelCol");
+}
+}
+
+function cancel(){
+ shorten = false;
+  $("#btn").val(shorten?"on":"off");
+	$("#btn").attr("class",shorten?"on":"off");
+	$("#lineColor").val(lineCol);
+	$("#nodeColor").val(nodeCol);
+	$("#selLineColor").val(selLineCol);
+	$("#selNodeColor").val(selNodeCol);
+	$("#bgColor").val(bgCol);
+	$("#labelColor").val(labelCol);
+	 onOptions=false;
+  hideOptions();
+}
